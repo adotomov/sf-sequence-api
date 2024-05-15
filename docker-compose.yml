@@ -1,0 +1,40 @@
+version: "3.9"
+services:
+  api:
+    container_name: api
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - HTTP_ADDR=127.0.0.1:8080
+      - HTTP_READ_TIMEOUT=240s
+      - HTTP_READ_HEADER_TIMEOUT=240s
+      - HTTP_WRITE_TIMEOUT=240s
+      - HTTP_IDLE_TIMEOUT=240s
+      - HTTP_MAX_HEADER_BYTES=1024
+      - SQL_DSN=
+      - SQL_DRIVER=postgres
+      - SQL_MAX_OPEN_CONNS=10
+      - SQL_CONN_MAX_IDLE_TIME=240s
+      - SQL_CONN_MAX_LIFETIME=1000s
+      - DEPLOYMENT_ENVIRONMENT=dev
+
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./tests/init_db.sql:docker-entrypoint-initdb.d/init.sql:ro
+    environment:
+      POSTGRES_DB: sfapi
+      POSTGRES_USER: sfuser
+      POSTGRES_PASSWORD: SfAPIPassword
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

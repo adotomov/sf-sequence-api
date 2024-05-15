@@ -1,0 +1,46 @@
+CREATE TABLE `SEQUENCE`
+(
+  `ID` varchar(100)
+  `NAME` varchar(100)
+  `OPEN_TRACKING_ENABLED` boolean
+  `CLICK_TRACKING_ENABLED` boolean
+  `STEPS_INTERVAL` int
+) DEFAULT CHARSET = utf8;
+
+CREATE TABLE `STEP`
+(
+  `ID` varchar(100)
+  `SEQUENCE_ID` varchar(100)
+  `EMAIL_SUBJECT` varchar(255)
+  `EMAIL_CONTENT` text
+) DEFAULT CHARSET = utf8;
+
+CREATE TABLE `MAILBOX`
+(
+  `ID` varchar(100)
+  `EMAIL` varchar(255)
+  `MAX_LIMIT` int
+) DEFAULT CHARSET = utf8;
+
+CREATE TABLE `SEQUENCE_MAILBOX`
+(
+  `MAILBOX_ID` varchar(100)
+  `SEQUENCE_ID` varchar(100)
+) DEFAULT CHARSET = utf8;
+
+CREATE TABLE `SCHEDULE`
+(
+  `ID` varchar(100)
+  `SEQUENCE_ID` varchar(100)
+  `START_DATE` datetime
+  `STATUS` enum ('INVALID', 'IN_PROGRESS', 'PENDING', 'SCHEDULED', 'CANCELLED', 'COMPLETED')
+) DEFAULT CHARSET = utf8;
+
+CREATE TABLE `TASK`
+(
+  `ID` varchar(100)
+  `SCHEDULE_ID` varchar(100)
+  `STEP_ID` varchar(100)
+  `EXECUTE_AT` datetime
+  `STATUS` enum ('INVALID', 'IN_PROGRESS', 'SCHEDULED', 'CANCELLED', 'COMPLETED')
+) DEFAULT CHARSET = utf8;
